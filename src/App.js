@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import InfoBox from './InfoBox';
 import Map from './Map'
 import Table from './Table'
+import LineGraph from './LineGraph'
 
 
 
@@ -71,9 +72,6 @@ function App() {
     // console.log(countryInfo)
 
   }
-
-  
-  // console.log(tableData)
   return (
     <div className="app">
       <div className='app__left'>
@@ -106,7 +104,9 @@ function App() {
           <Table list={tableData} />
         </CardContent>
 
+        <LineGraph />
       </Card>
+      
 
     </div>
 
