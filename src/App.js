@@ -4,33 +4,48 @@ import { useEffect, useState } from 'react';
 
 import InfoBox from './InfoBox';
 import Map from './Map'
+import Table from './Table'
 
 
-// watch video 2:04:00
+
+// watch video 2:18:00
 
 function App() {
   const [countries, setCountries] = useState([])
   const [country, setCountry] = useState('World Wide')
   const [countryInfo, setCountryInfo] = useState({})
+  const [tableData, setTableData]= useState([])
+
 
 
   const menuItems = countries.map((item, i) => <MenuItem value={item.value} key={i} >{item.name}</MenuItem>)
 
+  useEffect(()=>{
+    
+    fetch("https://disease.sh/v3/covid-19/all")
+    .then((res)=>res.json())
+    .then((data) =>{
 
+      setCountryInfo(data)
+    })
+
+  }
+    ,[])
 
   useEffect(() => {
 
-    const getCountries = async () => {
+    const getCountries =  () => {
 
-      await fetch("https://disease.sh/v3/covid-19/countries")
+        fetch("https://disease.sh/v3/covid-19/countries")
         .then((res) => res.json())
         .then((data) => {
           const dt = data.map(item => ({
             name: item.country,
             value: item.countryInfo.iso2
           }))
-
           setCountries(dt)
+          setTableData(data)
+          
         })
     }
     getCountries()
@@ -39,20 +54,24 @@ function App() {
   const onChangeCountry = async (e) => {
 
     const selectedCountry = e.target.value
-    setCountry(selectedCountry)
+    // setCountry(selectedCountry)
 
-    const url = selectedCountry === 'World wide' ? "https://disease.sh/v3/covid-19/all" 
+    const url = selectedCountry === 'World Wide' ? "https://disease.sh/v3/covid-19/all" 
                                                  : `https://disease.sh/v3/covid-19/countries/${selectedCountry}`
 
     await fetch(url)
     .then(res => res.json())
     .then(data => {
+      setCountry(selectedCountry)
       setCountryInfo(data)
     })
 
+    // console.log(countryInfo)
+
   }
 
-
+  
+  console.log(tableData)
   return (
     <div className="app">
       <div className='app__left'>
@@ -63,7 +82,7 @@ function App() {
           <FormControl className='app__dropdown'>
             <Select variant='outlined' value={country}  onChange={onChangeCountry} >
 
-              <MenuItem value='World wide' > World Wide </MenuItem>
+              <MenuItem value='World Wide' > World Wide </MenuItem>
               {menuItems}
 
             </Select>
@@ -71,9 +90,9 @@ function App() {
 
         </div>
         <div className='app__stats'>
-          <InfoBox title='Coranavirus Cases' cases={2134} total={234} />
-          <InfoBox title='Recovered' cases={1234} total={431234} />
-          <InfoBox title='Deaths' cases={3412} total={45132} />
+          <InfoBox title='Coranavirus Cases' cases={countryInfo.todayCases} total={countryInfo.cases} />
+          <InfoBox title='Recovered' cases={countryInfo.todayRecovered} total={countryInfo.recovered} />
+          <InfoBox title='Deaths' cases={countryInfo.todayDeaths} total={countryInfo.deaths} />
         </div>
 
         <Map />
@@ -81,7 +100,8 @@ function App() {
       </div>
       <Card className='app__right'>
         <CardContent>
-          Hello
+          <h3>Live Cases By Countries</h3>
+          <Table list={tableData} />
         </CardContent>
 
       </Card>
