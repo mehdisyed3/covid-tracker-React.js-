@@ -44,7 +44,8 @@ function App() {
             value: item.countryInfo.iso2
           }))
           setCountries(dt)
-          setTableData(data)
+          const sorted = data.sort(function(a,b){return b.cases - a.cases })
+          setTableData(sorted)
           
         })
     }
@@ -63,6 +64,7 @@ function App() {
     .then(res => res.json())
     .then(data => {
       setCountry(selectedCountry)
+
       setCountryInfo(data)
     })
 
@@ -71,7 +73,7 @@ function App() {
   }
 
   
-  console.log(tableData)
+  // console.log(tableData)
   return (
     <div className="app">
       <div className='app__left'>
@@ -100,7 +102,7 @@ function App() {
       </div>
       <Card className='app__right'>
         <CardContent>
-          <h3>Live Cases By Countries</h3>
+          <h3 >Live Cases By Countries</h3>
           <Table list={tableData} />
         </CardContent>
 
