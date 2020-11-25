@@ -51,7 +51,7 @@ const buildChartData = (data, casesType='cases') => { // will take cases automat
   let chartData = [];
   let lastDataPoint;
   for (let date in data.cases) {
-    console.log("@@@@@@@@",lastDataPoint )
+    // console.log("@@@@@@@@",lastDataPoint )
     if (lastDataPoint) {
       let newDataPoint = {
         x: date,
@@ -69,7 +69,7 @@ const buildChartData = (data, casesType='cases') => { // will take cases automat
 };
 
 
-function LineGraph({ casesType = 'cases' }) {
+function LineGraph() {
   const [data,setData] = useState({})
 
   useEffect(() => {
@@ -82,7 +82,7 @@ function LineGraph({ casesType = 'cases' }) {
       // console.log("^^^^",chartData)
     })
     
-  }, [casesType])
+  }, [])
   // console.log("D@T@",data)
 
   return (

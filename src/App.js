@@ -6,6 +6,7 @@ import InfoBox from './InfoBox';
 import Map from './Map'
 import Table from './Table'
 import LineGraph from './LineGraph'
+import "leaflet/dist/leaflet.css";
 
 
 
@@ -16,6 +17,10 @@ function App() {
   const [country, setCountry] = useState('World Wide')
   const [countryInfo, setCountryInfo] = useState({})
   const [tableData, setTableData]= useState([])
+  const [casesType, setCasesType] = useState("cases")
+  const [mapCountries, setMapCountries] = useState([])
+  const [mapCenter, setMapCenter] = useState({ lat: 40.80746, lng: 20.4796 })
+  const [mapZoom, setMapZoom] = useState(2)
 
 
 
@@ -47,6 +52,7 @@ function App() {
           setCountries(dt)
           const sorted = data.sort(function(a,b){return b.cases - a.cases })
           setTableData(sorted)
+          setMapCountries(data)
           
         })
     }
@@ -67,9 +73,19 @@ function App() {
       setCountry(selectedCountry)
 
       setCountryInfo(data)
+
+      selectedCountry === "World Wide" ? 
+                                      setMapCenter([40.80746, 20.4796]) :
+                                      setMapCenter([data.countryInfo.lat, data.countryInfo.long])
+
+      setMapZoom(4)
+    
+      // console.log("@@@@",data.countryInfo)
+      console.log(mapCenter)
+
     })
 
-    // console.log(countryInfo)
+
 
   }
   return (
@@ -95,7 +111,7 @@ function App() {
           <InfoBox title='Deaths' cases={countryInfo.todayDeaths} total={countryInfo.deaths} />
         </div>
 
-        <Map />
+        <Map countries={mapCountries} center={mapCenter} zoom={mapZoom} />
 
       </div>
       <Card className='app__right'>
