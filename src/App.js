@@ -7,10 +7,11 @@ import Map from './Map'
 import Table from './Table'
 import LineGraph from './LineGraph'
 import "leaflet/dist/leaflet.css";
+import {prettyPrintStat} from './util'
 
 
 
-// watch video 3:13:00
+// watch video 4:20:00
 
 function App() {
   const [countries, setCountries] = useState([])
@@ -81,7 +82,7 @@ function App() {
       setMapZoom(4)
     
       // console.log("@@@@",data.countryInfo)
-      console.log(mapCenter)
+      // console.log(mapCenter)
 
     })
 
@@ -94,7 +95,7 @@ function App() {
 
         <div className="app__header">
 
-          <h1>Covid Tracker</h1>
+          <h1 className='heading'>Covid Tracker</h1>
           <FormControl className='app__dropdown'>
             <Select variant='outlined' value={country}  onChange={onChangeCountry} >
 
@@ -106,21 +107,21 @@ function App() {
 
         </div>
         <div className='app__stats'>
-          <InfoBox title='Coranavirus Cases' cases={countryInfo.todayCases} total={countryInfo.cases} />
-          <InfoBox title='Recovered' cases={countryInfo.todayRecovered} total={countryInfo.recovered} />
-          <InfoBox title='Deaths' cases={countryInfo.todayDeaths} total={countryInfo.deaths} />
+          <InfoBox onClick={()=>setCasesType('cases')} title='Coranavirus Cases' active={casesType === "cases"} cases={prettyPrintStat(countryInfo.todayCases)} total={countryInfo.cases} />
+          <InfoBox onClick={()=>setCasesType('recovered')} title='Recovered' active={casesType === 'recovered'} cases={prettyPrintStat(countryInfo.todayRecovered)} total={countryInfo.recovered} />
+          <InfoBox onClick={()=>setCasesType('deaths')} title='Deaths' active={casesType === "deaths"} cases={prettyPrintStat(countryInfo.todayDeaths)} total={countryInfo.deaths} />
         </div>
 
-        <Map countries={mapCountries} center={mapCenter} zoom={mapZoom} />
+        <Map casesType={casesType} countries={mapCountries} center={mapCenter} zoom={mapZoom} />
 
       </div>
       <Card className='app__right'>
         <CardContent>
-          <h3 >Live Cases By Countries</h3>
+          <h3 className="heading" >Live Cases By Countries</h3>
           <Table list={tableData} />
         </CardContent>
 
-        <LineGraph />
+        <LineGraph casesType={casesType} />
       </Card>
       
 

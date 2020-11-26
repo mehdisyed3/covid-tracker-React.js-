@@ -6,7 +6,13 @@ body{
   background-color: #f5f6fa;
 }
 
+.heading{
+  color:  rgb(127, 25, 136);
+}
 
+.app__dropdown{
+  background-color: white;
+}
 
 .app{
   display: flex;

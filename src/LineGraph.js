@@ -69,25 +69,30 @@ const buildChartData = (data, casesType='cases') => { // will take cases automat
 };
 
 
-function LineGraph() {
+function LineGraph({casesType}) {
   const [data,setData] = useState({})
 
   useEffect(() => {
-    
-    fetch('https://disease.sh/v3/covid-19/historical/all?lastdays=120')
-    .then((res) => res.json())
-    .then((info) => {
-      const chartData =buildChartData(info)
-      setData(chartData)
-      // console.log("^^^^",chartData)
-    })
-    
-  }, [])
+      const fetchData = async () => {
+      await fetch("https://disease.sh/v3/covid-19/historical/all?lastdays=120")
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          let chartData = buildChartData(data, casesType);
+          setData(chartData);
+          // console.log(chartData);
+          // buildChart(chartData);
+        });
+    };
+
+    fetchData();
+  }, [casesType])
   // console.log("D@T@",data)
 
   return (
     <div>
-      <h3>World wide cases</h3> <br/>
+      <h3 className="heading">World wide new {casesType}</h3> <br/>
       {data?.length > 0 &&
       <Line data={{
             datasets: [
